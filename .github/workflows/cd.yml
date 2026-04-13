@@ -1,0 +1,18 @@
+name: Continuous Deployment
+
+on:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Trigger Deployment
+        run: echo "Deployment is automatically handled by Back4App Containers upon push to main branch."
