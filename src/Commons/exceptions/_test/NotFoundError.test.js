@@ -10,7 +10,7 @@ describe("NotFoundError", () => {
     expect(notFoundError).toBeInstanceOf(Error);
 
     expect(notFoundError.message).toEqual("not found!");
-    expect(notFoundError.statusCode).toEqual(500);
+    expect(notFoundError.statusCode).toEqual(404);
     expect(notFoundError.name).toEqual("NotFoundError");
   });
 });
