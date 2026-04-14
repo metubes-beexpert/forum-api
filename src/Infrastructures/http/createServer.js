@@ -5,7 +5,7 @@ import users from "../../Interfaces/http/api/users/index.js";
 import authentications from "../../Interfaces/http/api/authentications/index.js";
 import threads from "../../Interfaces/http/api/threads/index.js";
 import likes from "../../Interfaces/http/api/likes/index.js";
-import rateLimit from "express-rate-limit";
+import rateLimitPg from "./rateLimitPg.js";
 
 const createServer = async (container) => {
   const app = express();
@@ -16,17 +16,9 @@ const createServer = async (container) => {
   // Middleware for parsing JSON
   app.use(express.json());
 
-  // Setup rate limit for /threads
-  const threadsLimiter = rateLimit({
-    windowMs: 1 * 60 * 1000, // 1 minute
-    max: 90, // Limit each IP to 90 requests per `window` (here, per 1 minute)
-    message: {
-      status: "fail",
-      message: "Terlalu banyak permintaan, silakan coba lagi nanti.",
-    },
-    standardHeaders: true,
-    legacyHeaders: false,
-  });
+  // Setup custom rate limit menggunakan PostgresDB
+  // Hal ini memastikan Vercel Serverless bisa memiliki memory terpusat (centralized store) tanpa crash
+  const threadsLimiter = rateLimitPg;
 
   // Register routes
   app.use("/users", users(container));
