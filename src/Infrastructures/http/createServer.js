@@ -9,6 +9,9 @@ import rateLimit from "express-rate-limit";
 
 const createServer = async (container) => {
   const app = express();
+  
+  // Wajib pada lingkungan Vercel/Proxy agar express-rate-limit berjalan dengan aman tanpa error saat menangkap IP.
+  app.set("trust proxy", 1);
 
   // Middleware for parsing JSON
   app.use(express.json());
