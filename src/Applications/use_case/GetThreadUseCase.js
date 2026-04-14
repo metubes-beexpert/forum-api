@@ -3,10 +3,11 @@ import DetailComment from "../../Domains/comments/entities/DetailComment.js";
 import DetailReply from "../../Domains/replies/entities/DetailReply.js";
 
 class GetThreadUseCase {
-  constructor({ threadRepository, commentRepository, replyRepository }) {
+  constructor({ threadRepository, commentRepository, replyRepository, likeRepository }) {
     this._threadRepository = threadRepository;
     this._commentRepository = commentRepository;
     this._replyRepository = replyRepository;
+    this._likeRepository = likeRepository;
   }
 
   async execute(useCasePayload) {
@@ -17,6 +18,11 @@ class GetThreadUseCase {
       threadId
     );
     const replies = await this._replyRepository.getRepliesByThreadId(threadId);
+    
+    let likes = [];
+    if (this._likeRepository) {
+      likes = await this._likeRepository.getLikesByThreadId(threadId);
+    }
 
     const detailComments = comments.map((comment) => {
       const commentReplies = replies
@@ -39,6 +45,7 @@ class GetThreadUseCase {
         content: comment.content,
         replies: commentReplies,
         is_delete: comment.is_delete,
+        likeCount: likes.filter((like) => like.comment_id === comment.id).length,
       });
     });
 

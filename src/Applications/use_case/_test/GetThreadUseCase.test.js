@@ -2,6 +2,7 @@ import { vi } from "vitest";
 import ThreadRepository from "../../../Domains/threads/ThreadRepository.js";
 import CommentRepository from "../../../Domains/comments/CommentRepository.js";
 import ReplyRepository from "../../../Domains/replies/ReplyRepository.js";
+import LikeRepository from "../../../Domains/likes/LikeRepository.js";
 import GetThreadUseCase from "../GetThreadUseCase.js";
 import DetailThread from "../../../Domains/threads/entities/DetailThread.js";
 import DetailComment from "../../../Domains/comments/entities/DetailComment.js";
@@ -61,6 +62,7 @@ describe("GetThreadUseCase", () => {
     const mockThreadRepository = new ThreadRepository();
     const mockCommentRepository = new CommentRepository();
     const mockReplyRepository = new ReplyRepository();
+    const mockLikeRepository = new LikeRepository();
 
     mockThreadRepository.getThreadById = vi
       .fn()
@@ -71,11 +73,15 @@ describe("GetThreadUseCase", () => {
     mockReplyRepository.getRepliesByThreadId = vi
       .fn()
       .mockImplementation(() => Promise.resolve(expectedReplies));
+    mockLikeRepository.getLikesByThreadId = vi
+      .fn()
+      .mockImplementation(() => Promise.resolve([{ comment_id: "comment-1", owner: "user-1" }]));
 
     const getThreadUseCase = new GetThreadUseCase({
       threadRepository: mockThreadRepository,
       commentRepository: mockCommentRepository,
       replyRepository: mockReplyRepository,
+      likeRepository: mockLikeRepository,
     });
 
     // Action
@@ -111,6 +117,7 @@ describe("GetThreadUseCase", () => {
               is_delete: true,
             }),
           ],
+          likeCount: 1,
         }),
         new DetailComment({
           id: "comment-2",
@@ -119,6 +126,7 @@ describe("GetThreadUseCase", () => {
           content: "rahasia",
           is_delete: true,
           replies: [],
+          likeCount: 0,
         }),
       ],
     });

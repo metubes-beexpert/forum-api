@@ -33,6 +33,10 @@ import CommentRepositoryPostgres from "./repository/CommentRepositoryPostgres.js
 import AddCommentUseCase from "../Applications/use_case/AddCommentUseCase.js";
 import DeleteCommentUseCase from "../Applications/use_case/DeleteCommentUseCase.js";
 
+import LikeRepository from "../Domains/likes/LikeRepository.js";
+import LikeRepositoryPostgres from "./repository/LikeRepositoryPostgres.js";
+import ToggleLikeCommentUseCase from "../Applications/use_case/ToggleLikeCommentUseCase.js";
+
 import ReplyRepository from "../Domains/replies/ReplyRepository.js";
 import ReplyRepositoryPostgres from "./repository/ReplyRepositoryPostgres.js";
 import AddReplyUseCase from "../Applications/use_case/AddReplyUseCase.js";
@@ -100,6 +104,13 @@ container.register([
   {
     key: ReplyRepository.name,
     Class: ReplyRepositoryPostgres,
+    parameter: {
+      dependencies: [{ concrete: pool }, { concrete: nanoid }],
+    },
+  },
+  {
+    key: LikeRepository.name,
+    Class: LikeRepositoryPostgres,
     parameter: {
       dependencies: [{ concrete: pool }, { concrete: nanoid }],
     },
@@ -199,6 +210,7 @@ container.register([
         { name: "threadRepository", internal: ThreadRepository.name },
         { name: "commentRepository", internal: CommentRepository.name },
         { name: "replyRepository", internal: ReplyRepository.name },
+        { name: "likeRepository", internal: LikeRepository.name },
       ],
     },
   },
@@ -250,6 +262,18 @@ container.register([
       injectType: "destructuring",
       dependencies: [
         { name: "replyRepository", internal: ReplyRepository.name },
+        { name: "commentRepository", internal: CommentRepository.name },
+        { name: "threadRepository", internal: ThreadRepository.name },
+      ],
+    },
+  },
+  {
+    key: ToggleLikeCommentUseCase.name,
+    Class: ToggleLikeCommentUseCase,
+    parameter: {
+      injectType: "destructuring",
+      dependencies: [
+        { name: "likeRepository", internal: LikeRepository.name },
         { name: "commentRepository", internal: CommentRepository.name },
         { name: "threadRepository", internal: ThreadRepository.name },
       ],

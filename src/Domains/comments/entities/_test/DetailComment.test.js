@@ -17,6 +17,7 @@ describe("a DetailComment entity", () => {
           content: "content",
           replies: [],
           is_delete: false,
+          likeCount: 0,
         })
     ).toThrowError("DETAIL_COMMENT.NOT_MEET_DATA_TYPE_SPECIFICATION");
   });
@@ -28,6 +29,7 @@ describe("a DetailComment entity", () => {
       content: "sebuah comment",
       replies: [],
       is_delete: false,
+      likeCount: 0,
     };
     const detailComment = new DetailComment(payload);
     expect(detailComment.content).toEqual("sebuah comment");
@@ -40,6 +42,7 @@ describe("a DetailComment entity", () => {
       content: "sebuah comment",
       replies: [],
       is_delete: true,
+      likeCount: 0,
     };
     const detailComment = new DetailComment(payload);
     expect(detailComment.content).toEqual("**komentar telah dihapus**");

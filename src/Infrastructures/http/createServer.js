@@ -4,6 +4,8 @@ import DomainErrorTranslator from "../../Commons/exceptions/DomainErrorTranslato
 import users from "../../Interfaces/http/api/users/index.js";
 import authentications from "../../Interfaces/http/api/authentications/index.js";
 import threads from "../../Interfaces/http/api/threads/index.js";
+import likes from "../../Interfaces/http/api/likes/index.js";
+import rateLimit from "express-rate-limit";
 
 const createServer = async (container) => {
   const app = express();
@@ -11,10 +13,23 @@ const createServer = async (container) => {
   // Middleware for parsing JSON
   app.use(express.json());
 
+  // Setup rate limit for /threads
+  const threadsLimiter = rateLimit({
+    windowMs: 1 * 60 * 1000, // 1 minute
+    max: 90, // Limit each IP to 90 requests per `window` (here, per 1 minute)
+    message: {
+      status: "fail",
+      message: "Terlalu banyak permintaan, silakan coba lagi nanti.",
+    },
+    standardHeaders: true,
+    legacyHeaders: false,
+  });
+
   // Register routes
   app.use("/users", users(container));
   app.use("/authentications", authentications(container));
-  app.use("/threads", threads(container));
+  app.use("/threads", threadsLimiter, threads(container));
+  likes.register(app, { container });
 
   // Global error handler
   app.use((error, req, res, next) => {
