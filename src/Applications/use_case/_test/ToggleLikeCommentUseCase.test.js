@@ -16,7 +16,7 @@ describe('ToggleLikeCommentUseCase', () => {
     const mockCommentRepository = new CommentRepository();
     const mockThreadRepository = new ThreadRepository();
 
-    mockThreadRepository.checkAvailabilityThread = vi.fn().mockImplementation(() => Promise.resolve());
+    mockThreadRepository.verifyThreadAvailability = vi.fn().mockImplementation(() => Promise.resolve());
     mockCommentRepository.checkAvailabilityComment = vi.fn().mockImplementation(() => Promise.resolve());
     mockLikeRepository.checkLikeExistence = vi.fn().mockImplementation(() => Promise.resolve(false));
     mockLikeRepository.addLike = vi.fn().mockImplementation(() => Promise.resolve());
@@ -31,7 +31,7 @@ describe('ToggleLikeCommentUseCase', () => {
     await toggleLikeCommentUseCase.execute(useCasePayload);
 
     // Assert
-    expect(mockThreadRepository.checkAvailabilityThread).toBeCalledWith(useCasePayload.threadId);
+    expect(mockThreadRepository.verifyThreadAvailability).toBeCalledWith(useCasePayload.threadId);
     expect(mockCommentRepository.checkAvailabilityComment).toBeCalledWith(useCasePayload.commentId);
     expect(mockLikeRepository.checkLikeExistence).toBeCalledWith(useCasePayload.commentId, useCasePayload.owner);
     expect(mockLikeRepository.addLike).toBeCalledWith(useCasePayload.commentId, useCasePayload.owner);
@@ -49,7 +49,7 @@ describe('ToggleLikeCommentUseCase', () => {
     const mockCommentRepository = new CommentRepository();
     const mockThreadRepository = new ThreadRepository();
 
-    mockThreadRepository.checkAvailabilityThread = vi.fn().mockImplementation(() => Promise.resolve());
+    mockThreadRepository.verifyThreadAvailability = vi.fn().mockImplementation(() => Promise.resolve());
     mockCommentRepository.checkAvailabilityComment = vi.fn().mockImplementation(() => Promise.resolve());
     mockLikeRepository.checkLikeExistence = vi.fn().mockImplementation(() => Promise.resolve(true));
     mockLikeRepository.deleteLike = vi.fn().mockImplementation(() => Promise.resolve());
@@ -64,7 +64,7 @@ describe('ToggleLikeCommentUseCase', () => {
     await toggleLikeCommentUseCase.execute(useCasePayload);
 
     // Assert
-    expect(mockThreadRepository.checkAvailabilityThread).toBeCalledWith(useCasePayload.threadId);
+    expect(mockThreadRepository.verifyThreadAvailability).toBeCalledWith(useCasePayload.threadId);
     expect(mockCommentRepository.checkAvailabilityComment).toBeCalledWith(useCasePayload.commentId);
     expect(mockLikeRepository.checkLikeExistence).toBeCalledWith(useCasePayload.commentId, useCasePayload.owner);
     expect(mockLikeRepository.deleteLike).toBeCalledWith(useCasePayload.commentId, useCasePayload.owner);

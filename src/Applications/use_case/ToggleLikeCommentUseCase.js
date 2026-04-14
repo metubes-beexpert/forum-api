@@ -8,7 +8,7 @@ class ToggleLikeCommentUseCase {
   async execute(useCasePayload) {
     const { threadId, commentId, owner } = useCasePayload;
 
-    await this._threadRepository.checkAvailabilityThread(threadId);
+    await this._threadRepository.verifyThreadAvailability(threadId);
     await this._commentRepository.checkAvailabilityComment(commentId);
 
     const isLiked = await this._likeRepository.checkLikeExistence(
