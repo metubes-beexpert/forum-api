@@ -3,15 +3,13 @@ import createServer from "./Infrastructures/http/createServer.js";
 import container from "./Infrastructures/container.js";
 import config from "./Commons/config.js";
 
-const start = async () => {
-  const app = await createServer(container);
-  const { host, port } = config.app;
+const app = await createServer(container);
+const { host, port } = config.app;
 
+if (process.env.VERCEL !== '1') {
   app.listen(port, host, () => {
     console.log(`server start at http://${host}:${port}`);
   });
-};
-
-start();
+}
 
 export default app;
